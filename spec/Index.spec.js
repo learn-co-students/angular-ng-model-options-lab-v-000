@@ -5,28 +5,17 @@ describe('Debounce', function() {
 
 	var div = element(by.css('div[ng-controller]'));
 	var input = element(by.css('input'));
+	var attrs = input.getAttribute('ng-model-options');
 
 	it('should update on blur immediately', function() {
-		input.click();
-		setTimeout(function () {
-			element(by.css('body')).click();
-
-			expect(div.getText()).toEqual('test');
-		}, 20);
-
-		input.sendKeys('test');
+		expect(attrs).toContain('\'blur\': 0');
 	});
 
-	it('should not update on typing', function(done) {
-		input.click();
-		input.sendKeys('test');
+	it('should update after not typing for 500ms', function() {
+		expect(attrs).toContain('\'default\': 500');
+	});
 
-		var d = protractor.promise.defer();
-		setTimeout(function() {
-			d.fulfill(div.getText());
-			done();
-		}, 20);
-
-		expect(d).toEqual('test');
+	it('should have an updateOn property', function() {
+		expect(attrs).toContain('updateOn');
 	});
 });
